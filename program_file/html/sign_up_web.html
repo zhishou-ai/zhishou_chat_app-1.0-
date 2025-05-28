@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f2f5;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: url('屏幕截图 2025-04-10 193925.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-width: 90%;
+        }
+
+        .login-title {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-mismatch {
+            border-color: #dc3545 !important;
+        }
+    </style>
+    <script>
+        // 在页面加载时检查 URL 中是否有错误信息或成功消息
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            if (message) {
+                alert(message);
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2 class="login-title">注册新账号</h2>
+        <form id="registerForm"  method="post">
+            <div class="input-group">
+                <input type="text" 
+                       id="newUsername" 
+                       class="input-field" 
+                       name="username" 
+                       placeholder="请输入用户名（3~20个字符）"
+                       autocomplete="off"
+                       required
+                >
+            </div>
+            <div class="input-group">
+                <input type="password" 
+                       id="newPassword"
+                       class="input-field" 
+                       name="password" 
+                       placeholder="请输入密码（6位~8位）"
+                       required
+                >
+            </div>
+            <div class="input-group">
+                <input type="password"
+                       id="confirmPassword" 
+                       class="input-field" 
+                       name="confirmPassword" 
+                       placeholder="请再次输入密码"
+                       required
+                >
+            </div>
+            <button type="submit" class="submit-btn">立即注册</button>
+        </form>
+        <div class="links" style="text-align: center; margin-top: 20px;">
+            <a href="../index.html">已有账号？立即登录</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('newUsername').value.trim();
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // 清除错误状态
+            document.getElementById('confirmPassword').classList.remove('password-mismatch');
+            
+            // 前端验证逻辑
+            let isValid = true;
+            
+            // 1. 验证密码一致性
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                document.getElementById('confirmPassword').classList.add('password-mismatch');
+                isValid = false;
+            }
+            
+            // 2. 验证密码长度（修正原代码逻辑错误）
+            if (password.length < 6 || password.length > 8) { // 改为或条件
+                alert('密码长度必须为6~8位');
+                isValid = false;
+            }
+            
+            // 3. 验证用户名长度
+            if (username.length < 3 || username.length > 20) { // 改为或条件
+                alert('用户名长度必须为3~20字符');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+
+            // 创建XHR对象
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://192.168.3.232:80/init/sign_up', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            // 处理响应
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert(xhr.responseText); // 显示服务器返回的消息
+                    if (xhr.responseText.includes("成功")) {
+                        window.location.href = "../index.html"; // 注册成功跳转到登录页
+                    }
+                } else {
+                    alert('请求失败，状态码: ' + xhr.status);
+                }
+            };
+
+            xhr.onerror = function() {
+                alert('网络错误，请求未能发送');
+            };
+
+            // 发送编码后的数据
+            const data = new URLSearchParams();
+            data.append('username', username);
+            data.append('password', password);
+            xhr.send(data.toString());
+        });
+    </script>
+</body>
+</html>

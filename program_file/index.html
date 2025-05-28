@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f2f5;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-width: 90%;
+        }
+
+        .login-title {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .input-field::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+            color: #999;
+            font-size: 14px;
+        }
+        .input-field::-moz-placeholder { /* Firefox 19+ */
+            color: #999;
+            font-size: 14px;
+        }
+        .input-field:-ms-input-placeholder { /* IE 10+ */
+            color: #999;
+            font-size: 14px;
+        }
+        .input-field:-moz-placeholder { /* Firefox 18- */
+            color: #999;
+            font-size: 14px;
+        }
+        .links {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container"> <!-- 隔离表单于页面其他元素 -->
+        <h2 class="login-title">用户登录</h2>
+        <form action="http://192.168.3.232:80/init/sign_in" method="post" target="_blank">
+            <div class="input-group">
+                <input type="text" 
+                       class="input-field" 
+                       name="username" 
+                       placeholder="请输入用户名"
+                       required
+                >
+            </div>
+            <div class="input-group">
+                <input type="password" 
+                       class="input-field" 
+                       name="password" 
+                       placeholder="请输入密码"
+                       required
+                >
+            </div>
+            <button type="submit" class="submit-btn">立即登录</button>
+        </form>
+        <div class="links">
+            <a href="html/sign_up_web.html">注册新账号</a>
+
+        </div>
+    </div>
+</body>
+</html>
