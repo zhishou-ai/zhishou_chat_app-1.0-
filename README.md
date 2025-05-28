@@ -1,6 +1,7 @@
 # zhishou_chat_app(1.0)
 基于Python、MySQL和Apache的聊天软件
-第一次迭代包括功能：
+
+# 第一次迭代实现的功能：
 
 1. 私聊发消息 
 
@@ -8,6 +9,7 @@
 
 3. 网页版和app版的共同支持 
 
+# 部署方式：
 
 [MySQL数据库的部署方式](https://github.com/zhishou-ai/MySQL.git)
 
