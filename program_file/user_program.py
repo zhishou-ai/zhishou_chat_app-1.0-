@@ -1,6 +1,7 @@
 import sys
 import asyncio
 import websockets
+import os
 import json
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import QThread, pyqtSignal,QObject
