@@ -1,16 +1,18 @@
-# zhishou_chat_app(1.0)
-基于Python、MySQL和Apache的聊天软件
+# 本地数据库功能
+基于Python、MySQL等
 
 # 第一次迭代实现的功能：
 
-1. 私聊发消息 
+1. 储存和调用本地数据
 
-2. 建群以及群聊
-
-3. 网页版和app版的共同支持 
+2. 讲数据和服务端同步
 
 # 部署方式：
 
 [MySQL数据库的部署方式](https://github.com/zhishou-ai/MySQL.git)
 
-[Apache的部署方式](https://github.com/zhishou-ai/Apache.git)
+# 使用方法：
+
+将你的代码上传到此分支
+
+> 直接点击「+」键添加文件即可，若没有权限，请找火命要
