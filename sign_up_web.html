@@ -28,7 +28,7 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 400px;
             max-width: 90%;
         }
 
@@ -84,6 +84,40 @@
         .password-mismatch {
             border-color: #dc3545 !important;
         }
+
+        .role-selector {
+            margin-bottom: 20px;
+        }
+
+        .role-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .role-option:last-child {
+            margin-right: 0;
+        }
+
+        .role-option.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .teacher-password-group {
+            display: none;
+        }
     </style>
     <script>
         // 在页面加载时检查 URL 中是否有错误信息或成功消息
@@ -100,7 +134,7 @@
 <body>
     <div class="login-container">
         <h2 class="login-title">注册新账号</h2>
-        <form id="registerForm"  method="post">
+        <form id="registerForm" method="post">
             <div class="input-group">
                 <input type="text" 
                        id="newUsername" 
@@ -129,6 +163,25 @@
                        required
                 >
             </div>
+            
+            <div class="input-group role-selector">
+                <label style="display: block; margin-bottom: 10px;">您的身份是：</label>
+                <div class="role-options">
+                    <div class="role-option" data-role="student" onclick="selectRole(this)">学生</div>
+                    <div class="role-option" data-role="teacher" onclick="selectRole(this)">老师</div>
+                </div>
+                <input type="hidden" id="userRole" name="role" value="">
+            </div>
+            
+            <div class="input-group teacher-password-group" id="teacherPasswordGroup">
+                <input type="password"
+                       id="teacherPassword"
+                       class="input-field" 
+                       name="teacherPassword" 
+                       placeholder="请输入教师验证密码"
+                >
+            </div>
+            
             <button type="submit" class="submit-btn">立即注册</button>
         </form>
         <div class="links" style="text-align: center; margin-top: 20px;">
@@ -136,12 +189,34 @@
         </div>
     </div>
     <script>
+        // 选择身份
+        function selectRole(element) {
+            const roleOptions = document.querySelectorAll('.role-option');
+            roleOptions.forEach(option => option.classList.remove('selected'));
+            
+            element.classList.add('selected');
+            const selectedRole = element.getAttribute('data-role');
+            document.getElementById('userRole').value = selectedRole;
+            
+            // 显示或隐藏教师密码输入框
+            const teacherPasswordGroup = document.getElementById('teacherPasswordGroup');
+            if (selectedRole === 'teacher') {
+                teacherPasswordGroup.style.display = 'block';
+                document.getElementById('teacherPassword').setAttribute('required', '');
+            } else {
+                teacherPasswordGroup.style.display = 'none';
+                document.getElementById('teacherPassword').removeAttribute('required');
+            }
+        }
+        
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.getElementById('userRole').value;
+            const teacherPassword = document.getElementById('teacherPassword')?.value || '';
 
             // 清除错误状态
             document.getElementById('confirmPassword').classList.remove('password-mismatch');
@@ -149,21 +224,27 @@
             // 前端验证逻辑
             let isValid = true;
             
-            // 1. 验证密码一致性
+            // 1. 验证是否选择了身份
+            if (!role) {
+                alert('请选择您的身份');
+                isValid = false;
+            }
+            
+            // 2. 验证密码一致性
             if (password !== confirmPassword) {
                 alert('两次输入的密码不一致');
                 document.getElementById('confirmPassword').classList.add('password-mismatch');
                 isValid = false;
             }
             
-            // 2. 验证密码长度（修正原代码逻辑错误）
-            if (password.length < 6 || password.length > 8) { // 改为或条件
+            // 3. 验证密码长度
+            if (password.length < 6 || password.length > 8) {
                 alert('密码长度必须为6~8位');
                 isValid = false;
             }
             
-            // 3. 验证用户名长度
-            if (username.length < 3 || username.length > 20) { // 改为或条件
+            // 4. 验证用户名长度
+            if (username.length < 3 || username.length > 20) {
                 alert('用户名长度必须为3~20字符');
                 isValid = false;
             }
@@ -178,8 +259,10 @@
             // 处理响应
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    alert(xhr.responseText); // 显示服务器返回的消息
-                    if (xhr.responseText.includes("成功")) {
+                    const response = xhr.responseText;
+                    alert(response); // 显示服务器返回的消息
+                    
+                    if (response.includes("成功")) {
                         window.location.href = "../index.html"; // 注册成功跳转到登录页
                     }
                 } else {
@@ -195,6 +278,10 @@
             const data = new URLSearchParams();
             data.append('username', username);
             data.append('password', password);
+            data.append('role', role);
+            if (role === 'teacher') {
+                data.append('teacherPassword', teacherPassword);
+            }
             xhr.send(data.toString());
         });
     </script>
